@@ -13,10 +13,6 @@ public class Bullet : MonoBehaviour
             Health health = other.GetComponentInParent<Health>();
             if (health != null)
                 health.HP -= damage;
-            if (health == null)
-            {
-                Debug.LogWarning("Health component not found on collided object.");
-            }
         }
 
         gameObject.SetActive(false);
