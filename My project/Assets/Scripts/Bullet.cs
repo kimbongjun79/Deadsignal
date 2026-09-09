@@ -12,10 +12,9 @@ public class Bullet : MonoBehaviour
         {
             Health health = other.GetComponentInParent<Health>();
             if (health != null)
-                health.TakeDamage(damage);
+                health.HP -= damage;
         }
 
         gameObject.SetActive(false);
-        Destroy(gameObject);
     }
 }

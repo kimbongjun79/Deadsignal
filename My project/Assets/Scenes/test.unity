@@ -9087,7 +9087,7 @@ GameObject:
   - component: {fileID: 948159373}
   m_Layer: 0
   m_Name: Firepoint
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12226,7 +12226,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dfa927d7b6ea7a14ea55e95b40afd81d, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9304176
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dfa927d7b6ea7a14ea55e95b40afd81d, type: 3}
       propertyPath: m_LocalRotation.x
@@ -12234,7 +12234,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dfa927d7b6ea7a14ea55e95b40afd81d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.36650118
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dfa927d7b6ea7a14ea55e95b40afd81d, type: 3}
       propertyPath: m_LocalRotation.z
@@ -12246,7 +12246,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dfa927d7b6ea7a14ea55e95b40afd81d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 43
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dfa927d7b6ea7a14ea55e95b40afd81d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -12267,6 +12267,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dfa927d7b6ea7a14ea55e95b40afd81d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1227884563}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dfa927d7b6ea7a14ea55e95b40afd81d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1227884564}
   m_SourcePrefab: {fileID: 100100000, guid: dfa927d7b6ea7a14ea55e95b40afd81d, type: 3}
 --- !u!4 &1227884561 stripped
 Transform:
@@ -12289,8 +12292,8 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: dfa927d7b6ea7a14ea55e95b40afd81d, type: 3}
   m_Controller: {fileID: 9100000, guid: d6447afd53356d543b56fd6636902f17, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
+  m_CullingMode: 1
+  m_UpdateMode: 1
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -12300,6 +12303,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!136 &1227884564
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1227884562}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1228204966
 GameObject:
   m_ObjectHideFlags: 0
@@ -18601,6 +18627,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   health: {fileID: 1855129748}
+  previousHP: 0
   moveSpeed: 5
   mouseSensitivity: 10
   rb: {fileID: 1855129747}
@@ -18655,36 +18682,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   HP: 100
-  OnDamaged:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1227884563}
-        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-        m_MethodName: SetTrigger
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1227884562}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &1894276289
 GameObject:
   m_ObjectHideFlags: 0

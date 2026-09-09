@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     [Tooltip("체력 관리 컴포넌트")]
     [SerializeField] private Health health;
+    [Tooltip("직전 프레임의 HP (피격 감지용)")]
+    [SerializeField] private int previousHP;
     [Tooltip("플레이어 이동 속도")]
     [SerializeField] private float moveSpeed = 5f;
 
@@ -54,10 +56,9 @@ public class PlayerController : MonoBehaviour
     {
         health = GetComponent<Health>();
         rb = GetComponent<Rigidbody>();
-        health.OnDamaged.AddListener(() => animator.SetTrigger("Hit"));
-        health.OnDeath.AddListener(() => animator.SetBool("IsDead", true));
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         yaw = transform.eulerAngles.y;
+        previousHP = health.HP;
     }
 
     private void Update()
@@ -65,6 +66,17 @@ public class PlayerController : MonoBehaviour
         moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
 
         yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
+
+        if (health.HP <= 0)
+        {
+            animator.SetBool("IsDead", true);
+            return;
+        }
+        else if (health.HP < previousHP)
+        {
+            animator.SetTrigger("Hit");
+        }
+        previousHP = health.HP;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
