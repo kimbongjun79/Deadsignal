@@ -48,10 +48,14 @@ public class PlayerController : MonoBehaviour
     [Tooltip("화살표 길이")]
     [SerializeField] private float arrowLength = 2f;
 
+    [Tooltip("애니메이션 재생용 Animator 컴포넌트")]
+    [SerializeField] private Animator animator;
     private void Awake()
     {
         health = GetComponent<Health>();
         rb = GetComponent<Rigidbody>();
+        health.OnDamaged.AddListener(() => animator.SetTrigger("Hit"));
+        health.OnDeath.AddListener(() => animator.SetBool("IsDead", true));
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         yaw = transform.eulerAngles.y;
     }
@@ -62,11 +66,11 @@ public class PlayerController : MonoBehaviour
 
         yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             Fire();
-
-        if (health != null && health.HP <= 0)
-            gameObject.SetActive(false);
+            animator.SetTrigger("Fire");
+        }
     }
 
     private void FixedUpdate()
