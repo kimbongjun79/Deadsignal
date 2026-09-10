@@ -10,11 +10,11 @@ public class Bullet : MonoBehaviour
     {
         if (other.CompareTag("Player") || other.CompareTag("Enemy"))
         {
-            Health health = other.GetComponentInParent<Health>();
+            HealthSystemForDummies health = other.GetComponentInParent<HealthSystemForDummies>();
             if (health != null)
-                health.HP -= damage;
+                health.AddToCurrentHealth(-damage);
         }
 
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }

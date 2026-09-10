@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Transform player;
 
     [Tooltip("체력 관리 컴포넌트")]
-    [SerializeField] private Health health;
+    [SerializeField] private HealthSystemForDummies health;
 
     [Header("발사 설정")]
     [Tooltip("발사체를 발사할 수 있는 최대 거리")]
@@ -45,14 +45,12 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        health = GetComponent<Health>();
+        health = GetComponent<HealthSystemForDummies>();
         agent = GetComponent<NavMeshAgent>();
-
         if (player == null)
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null)
-                player = playerObj.transform;
+            if (playerObj != null) player = playerObj.transform;
         }
     }
 
@@ -82,7 +80,7 @@ public class Enemy : MonoBehaviour
             agent.SetDestination(player.position);
         }
 
-        if (health != null && health.HP <= 0)
+        if (health != null && !health.IsAlive)
             gameObject.SetActive(false);
     }
 
