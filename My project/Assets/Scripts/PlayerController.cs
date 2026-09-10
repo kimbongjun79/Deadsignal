@@ -5,10 +5,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Tooltip("체력 관리 컴포넌트")]
-    [SerializeField] private Health health;
-    [Tooltip("직전 프레임의 HP (피격 감지용)")]
+    [SerializeField] private HealthSystemForDummies health;
 
-    [SerializeField] private int previousHP;
+    [Tooltip("직전 프레임의 HP (피격 감지용)")]
+    [SerializeField] private float previousHP;
+
     [Header("이동 속도")]
     [Tooltip("걷기 속도")]
     [SerializeField] private float walkSpeed = 5f;
@@ -30,6 +31,16 @@ public class PlayerController : MonoBehaviour
 
     [Tooltip("현재 플레이어의 Y축 회전 각도")]
     [SerializeField] private float yaw;
+
+    [Header("무기 드롭")]
+    [Tooltip("손에 부착된 총기 오브젝트 (사망 시 분리됨)")]
+    [SerializeField] private Transform weapon;
+
+    [Tooltip("총기 분리 시 적용할 힘")]
+    [SerializeField] private float dropForce = 2f;
+
+    [Tooltip("사망 처리가 이미 실행되었는지 여부 (1회만 실행)")]
+    [SerializeField] private bool isDeathHandled;
 
     [Header("발사체")]
     [Tooltip("발사할 총알 프리펩")]
@@ -62,33 +73,39 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
     private void Awake()
     {
-        health = GetComponent<Health>();
+        health = GetComponent<HealthSystemForDummies>();
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         yaw = transform.eulerAngles.y;
-        previousHP = health.HP;
+        previousHP = health.CurrentHealth;
     }
 
     private void Update()
     {
+        if (!health.IsAlive)
+        {
+            if (!isDeathHandled)
+            {
+                animator.SetTrigger("IsDead");
+                DropWeapon();
+                rb.constraints = RigidbodyConstraints.FreezeRotation;
+                isDeathHandled = true;
+            }
+            return;
+        }
+
         moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
         yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
 
         isRunning = Input.GetKey(KeyCode.LeftShift) && moveInput.sqrMagnitude > 0.01f;
 
-        if (health.HP <= 0)
-        {
-            animator.SetTrigger("IsDead");
-            return;
-        }
-
-        animator.SetFloat("MoveX", moveInput.x);
-        animator.SetFloat("MoveZ", moveInput.z);
+        animator.SetFloat("MoveX", moveInput.x, 0.1f, Time.deltaTime);
+        animator.SetFloat("MoveZ", moveInput.z, 0.1f, Time.deltaTime);
         animator.SetBool("IsRunning", isRunning);
 
-        if (health.HP < previousHP)
+        if (health.CurrentHealth < previousHP)
             animator.SetTrigger("Hit");
-        previousHP = health.HP;
+        previousHP = health.CurrentHealth;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -99,6 +116,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!health.IsAlive)
+        {
+            rb.linearVelocity = Vector3.zero;
+            return;
+        }
+
         rb.MoveRotation(Quaternion.Euler(0f, yaw, 0f));
 
         float currentSpeed = isRunning ? runSpeed : walkSpeed;
@@ -170,5 +193,25 @@ public class PlayerController : MonoBehaviour
 
         Gizmos.DrawLine(end, end + right);
         Gizmos.DrawLine(end, end + left);
+    }
+
+    // 총기를 손(부모)에서 분리해 독립된 물리 오브젝트로 만듦
+    private void DropWeapon()
+    {
+        if (weapon == null) return;
+
+        weapon.SetParent(null);
+
+        Rigidbody weaponRb = weapon.GetComponent<Rigidbody>();
+        if (weaponRb == null)
+            weaponRb = weapon.gameObject.AddComponent<Rigidbody>();
+
+        Collider weaponCol = weapon.GetComponent<Collider>();
+        if (weaponCol == null)
+            weapon.gameObject.AddComponent<BoxCollider>();
+
+        weaponRb.isKinematic = false;
+        weaponRb.AddForce(transform.forward * dropForce + Vector3.up * dropForce * 0.5f, ForceMode.Impulse);
+        weaponRb.AddTorque(new Vector3(0.123f, 1.176314f, 0.51227f), ForceMode.Impulse);
     }
 }
