@@ -7,9 +7,17 @@ public class PlayerController : MonoBehaviour
     [Tooltip("체력 관리 컴포넌트")]
     [SerializeField] private Health health;
     [Tooltip("직전 프레임의 HP (피격 감지용)")]
+
     [SerializeField] private int previousHP;
-    [Tooltip("플레이어 이동 속도")]
-    [SerializeField] private float moveSpeed = 5f;
+    [Header("이동 속도")]
+    [Tooltip("걷기 속도")]
+    [SerializeField] private float walkSpeed = 5f;
+
+    [Tooltip("달리기 속도 (Shift)")]
+    [SerializeField] private float runSpeed = 9f;
+
+    [Tooltip("현재 달리기 여부")]
+    [SerializeField] private bool isRunning;
 
     [Tooltip("마우스 좌우 회전 감도")]
     [SerializeField] private float mouseSensitivity = 3f;
@@ -64,18 +72,22 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
-
         yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
+
+        isRunning = Input.GetKey(KeyCode.LeftShift) && moveInput.sqrMagnitude > 0.01f;
 
         if (health.HP <= 0)
         {
-            animator.SetBool("IsDead", true);
+            animator.SetTrigger("IsDead");
             return;
         }
-        else if (health.HP < previousHP)
-        {
+
+        animator.SetFloat("MoveX", moveInput.x);
+        animator.SetFloat("MoveZ", moveInput.z);
+        animator.SetBool("IsRunning", isRunning);
+
+        if (health.HP < previousHP)
             animator.SetTrigger("Hit");
-        }
         previousHP = health.HP;
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -89,7 +101,8 @@ public class PlayerController : MonoBehaviour
     {
         rb.MoveRotation(Quaternion.Euler(0f, yaw, 0f));
 
-        Vector3 vel = transform.TransformDirection(moveInput) * moveSpeed;
+        float currentSpeed = isRunning ? runSpeed : walkSpeed;
+        Vector3 vel = transform.TransformDirection(moveInput) * currentSpeed;
         rb.linearVelocity = new Vector3(vel.x, rb.linearVelocity.y, vel.z);
     }
 
