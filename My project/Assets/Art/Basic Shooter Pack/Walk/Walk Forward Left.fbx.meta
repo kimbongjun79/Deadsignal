@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: eac8868f5da9ba94a8dc87ef55885388
+guid: c8511fa069e5f40478aa9afb1a8b0889
 ModelImporter:
   serializedVersion: 24300
   internalIDToNameTable: []
@@ -32,11 +32,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: rifle aiming idle
+      name: Walk Forward Left
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 93
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
