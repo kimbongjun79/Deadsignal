@@ -12,4 +12,14 @@ public class TitleScreen : MonoBehaviour
     {
         SceneManager.LoadScene(gameplaySceneName);
     }
+
+    // 버튼에서 호출: 게임 종료
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 }
