@@ -109,4 +109,31 @@ public class EnemySpawnManager : MonoBehaviour
             health.ReviveWithMaximumHealth();
         }
     }
+    private void OnDrawGizmosSelected()
+    {
+        if (player == null) return;
+
+        Vector3 center = player.position;
+
+        Gizmos.color = Color.green;
+        DrawCircle(center, minSpawnDistance);
+
+        Gizmos.color = Color.red;
+        DrawCircle(center, maxSpawnDistance);
+    }
+
+    // XZ 평면 기준 원을 그리는 헬퍼 함수
+    private void DrawCircle(Vector3 center, float radius)
+    {
+        int segments = 48;
+        Vector3 prevPoint = center + new Vector3(radius, 0f, 0f);
+
+        for (int i = 1; i <= segments; i++)
+        {
+            float angle = i * Mathf.PI * 2f / segments;
+            Vector3 point = center + new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius);
+            Gizmos.DrawLine(prevPoint, point);
+            prevPoint = point;
+        }
+    }
 }
