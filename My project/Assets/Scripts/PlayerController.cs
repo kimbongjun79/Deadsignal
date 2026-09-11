@@ -20,8 +20,8 @@ public class PlayerController : MonoBehaviour
     [Tooltip("현재 달리기 여부")]
     [SerializeField] private bool isRunning;
 
-    [Tooltip("마우스 좌우 회전 감도")]
-    [SerializeField] private float mouseSensitivity = 3f;
+    [Tooltip("Q/E 키 입력 시 회전속도")]
+    [SerializeField] private float rotationSpeed = 5f;
 
     [Tooltip("이동에 사용되는 Rigidbody 컴포넌트")]
     [SerializeField] private Rigidbody rb;
@@ -42,15 +42,27 @@ public class PlayerController : MonoBehaviour
     [Tooltip("사망 처리가 이미 실행되었는지 여부 (1회만 실행)")]
     [SerializeField] private bool isDeathHandled;
 
-    [Header("발사체")]
-    [Tooltip("발사할 총알 프리펩")]
-    [SerializeField] private GameObject bulletPrefab;
+    [Header("히트스캔")]
+    [Tooltip("발사 간격 (초). 값이 작을수록 빠르게 연사")]
+    [SerializeField] private float fireRate = 0.25f;
+
+    [Tooltip("다음 발사가 가능해지는 시각")]
+    [SerializeField] private float nextFireTime;
+    [Tooltip("사거리")]
+    [SerializeField] private float hitscanRange = 50f;
+
+    [Tooltip("데미지")]
+    [SerializeField] private float hitscanDamage = 20f;
+
+    [Tooltip("피격 판정 대상 레이어")]
+    [SerializeField] private LayerMask hitMask = ~0;
 
     [Tooltip("총알이 발사되는 위치")]
     [SerializeField] private Transform firePoint;
 
-    [Tooltip("발사체 속도")]
-    [SerializeField] private float bulletSpeed = 20f;
+    [Header("총구 이펙트")]
+    [Tooltip("Cartoon FX 머즐 플래시 파티클 프리펩 (CFX_SpawnSystem에 사전 등록되어 있어야 함)")]
+    [SerializeField] private GameObject muzzleFlashPrefab;
 
     [Header("기즈모 - 시야각")]
     [Tooltip("시야각 표시 여부")]
@@ -90,12 +102,18 @@ public class PlayerController : MonoBehaviour
                 DropWeapon();
                 rb.constraints = RigidbodyConstraints.FreezeRotation;
                 isDeathHandled = true;
+
+                if (GameManager.Instance != null)
+                    GameManager.Instance.TriggerGameOver();
             }
             return;
         }
 
         moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
-        yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
+        if (Input.GetKey(KeyCode.Q))
+            yaw -= rotationSpeed* Time.deltaTime;
+        if (Input.GetKey(KeyCode.E))
+            yaw += rotationSpeed* Time.deltaTime;
 
         isRunning = Input.GetKey(KeyCode.LeftShift) && moveInput.sqrMagnitude > 0.01f;
 
@@ -107,13 +125,14 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("Hit");
         previousHP = health.CurrentHealth;
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time >= nextFireTime)
         {
             Fire();
             animator.SetTrigger("Fire");
+            nextFireTime = Time.time + fireRate;
         }
     }
-
+    
     private void FixedUpdate()
     {
         if (!health.IsAlive)
@@ -128,18 +147,20 @@ public class PlayerController : MonoBehaviour
         Vector3 vel = transform.TransformDirection(moveInput) * currentSpeed;
         rb.linearVelocity = new Vector3(vel.x, rb.linearVelocity.y, vel.z);
     }
-
-    // firePoint 위치에서 bulletPrefab을 생성하고 전방으로 발사
+    // firePoint에서 전방으로 Raycast를 쏴 즉시 판정하는 히트스캔 발사
     private void Fire()
     {
-        if (bulletPrefab == null || firePoint == null) return;
+        if (firePoint == null) return;
 
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
-        if (bulletRb != null)
-            bulletRb.linearVelocity = firePoint.forward * bulletSpeed;
+        SpawnMuzzleFlash();
+
+        if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hit, hitscanRange, hitMask))
+        {
+            HealthSystemForDummies health = hit.collider.GetComponentInParent<HealthSystemForDummies>();
+            if (health != null)
+                health.AddToCurrentHealth(-hitscanDamage);
+        }
     }
-
     private void OnDrawGizmos()
     {
         Vector3 origin = transform.position;
@@ -213,5 +234,15 @@ public class PlayerController : MonoBehaviour
         weaponRb.isKinematic = false;
         weaponRb.AddForce(transform.forward * dropForce + Vector3.up * dropForce * 0.5f, ForceMode.Impulse);
         weaponRb.AddTorque(new Vector3(0.123f, 1.176314f, 0.51227f), ForceMode.Impulse);
+    }
+
+    private void SpawnMuzzleFlash()
+    {
+        if (muzzleFlashPrefab == null || firePoint == null) return;
+
+        GameObject flash = Instantiate(muzzleFlashPrefab, firePoint);
+        flash.transform.localPosition = Vector3.zero;
+        flash.transform.localRotation = Quaternion.identity;
+        Destroy(flash, 2f);
     }
 }

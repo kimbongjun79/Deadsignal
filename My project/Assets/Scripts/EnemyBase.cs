@@ -85,6 +85,19 @@ public abstract class EnemyBase : MonoBehaviour
     {
         animator.SetTrigger("IsDead");
         agent.isStopped = true;
+
+        // 다른 몬스터의 이동 경로를 막지 않도록 Avoidance 비활성화
+        agent.radius = 0f;
+        agent.obstacleAvoidanceType = UnityEngine.AI.ObstacleAvoidanceType.NoObstacleAvoidance;
+
+        // 총알이 통과하도록 콜라이더 비활성화
+        Collider col = GetComponentInChildren<Collider>();
+        if (col != null)
+            col.enabled = false;
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.AddKill();
+
         enabled = false;
         Destroy(gameObject, destroyDelay);
     }
