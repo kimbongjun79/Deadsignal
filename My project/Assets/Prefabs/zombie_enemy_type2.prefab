@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7271523995568163980}
   - component: {fileID: 1915620254884526211}
   m_Layer: 0
-  m_Name: zombie_enemy_type1
+  m_Name: zombie_enemy_type2
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,7 +46,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 1.5
+  m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -96,8 +96,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthSystemForDummies
   IsAlive: 1
-  CurrentHealth: 30
-  MaximumHealth: 30
+  CurrentHealth: 18
+  MaximumHealth: 18
   HasAnimationWhenHealthChanges: 1
   AnimationDuration: 0.1
   OnCurrentHealthChanged:

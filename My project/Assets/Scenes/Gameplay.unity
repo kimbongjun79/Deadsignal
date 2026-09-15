@@ -576,7 +576,7 @@ Transform:
   m_GameObject: {fileID: 111238864}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 53.1, y: 1, z: -23.1}
+  m_LocalPosition: {x: 52.5, y: 1, z: -23.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1629,7 +1629,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.1981132, g: 0.13138723, b: 0.120550014, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -3261,7 +3261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ba1587f1d32d034ab0c9e353f6d1c2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  surviveTime: 600
+  surviveTime: 300
   elapsedTime: 0
   killCount: 0
   isGameOver: 0
@@ -8183,12 +8183,12 @@ MonoBehaviour:
   enemyPrefab: {fileID: 5411278423455690705, guid: aa5df369d0d387342b9b5292aac4a0c3, type: 3}
   minSpawnDistance: 11
   maxSpawnDistance: 15
-  timeToMax: 300
-  curveExponent: 3
-  startSpawnInterval: 10
-  minSpawnInterval: 1
+  timeToMax: 180
+  curveExponent: 2.5
+  startSpawnInterval: 8
+  minSpawnInterval: 0.5
   startHealthMultiplier: 1
-  maxHealthMultiplier: 5
+  maxHealthMultiplier: 3
   elapsedTime: 0
   spawnTimer: 0
 --- !u!4 &1486371071
@@ -9215,6 +9215,62 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2858638096905437887, guid: 9934dfa8234220f46b741d3b3738b2ed, type: 3}
   m_PrefabInstance: {fileID: 1659225523}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1659810938
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1659810940}
+  - component: {fileID: 1659810939}
+  m_Layer: 0
+  m_Name: EnemySpawner 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1659810939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659810938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcd63b80294f2fc4ab0a7512d1a521df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnManager
+  player: {fileID: 1855129743}
+  enemyPrefab: {fileID: 5411278423455690705, guid: 98d936166f51be34e930087c65641564, type: 3}
+  minSpawnDistance: 11
+  maxSpawnDistance: 15
+  timeToMax: 180
+  curveExponent: 2.5
+  startSpawnInterval: 16
+  minSpawnInterval: 3
+  startHealthMultiplier: 1.2
+  maxHealthMultiplier: 3
+  elapsedTime: 0
+  spawnTimer: 0
+--- !u!4 &1659810940
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659810938}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1681832621
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10136,14 +10192,14 @@ MonoBehaviour:
   walkSpeed: 2.3
   runSpeed: 5
   isRunning: 0
-  rotationSpeed: 45
+  rotationSpeed: 90
   rb: {fileID: 1855129747}
   moveInput: {x: 0, y: 0, z: 0}
   yaw: 0
   weapon: {fileID: 610418342}
   dropForce: 0.5
   isDeathHandled: 0
-  fireRate: 0.25
+  fireRate: 0.75
   nextFireTime: 0
   hitscanRange: 50
   hitscanDamage: 20
@@ -11897,7 +11953,6 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 1855129743}
   - {fileID: 395649598}
-  - {fileID: 1486371071}
   - {fileID: 467760304}
   - {fileID: 1617924856}
   - {fileID: 563838497}
@@ -11905,4 +11960,6 @@ SceneRoots:
   - {fileID: 1021829691}
   - {fileID: 1239533924}
   - {fileID: 517981282}
+  - {fileID: 1486371071}
+  - {fileID: 1659810940}
   - {fileID: 1786866656}
