@@ -7,6 +7,11 @@ public class PlayerController : MonoBehaviour
     public int CurrentAmmo => currentAmmo;
     public int ReserveAmmo => reserveAmmo;
     public bool IsReloading => isReloading;
+    // 아이템 등 외부에서 예비 탄약을 보충할 때 호출
+    public void AddReserveAmmo(int amount)
+    {
+        reserveAmmo += amount;
+    }
 
     [Tooltip("체력 관리 컴포넌트")]
     [SerializeField] private HealthSystemForDummies health;

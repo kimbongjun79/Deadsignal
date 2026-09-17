@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7271523995568163980}
   - component: {fileID: 1915620254884526211}
   m_Layer: 0
-  m_Name: zombie_enemy_type1
+  m_Name: Walking_zombie
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5411278423455690705}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -54.84, y: 0, z: 9.98}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -46,7 +46,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 1.5
+  m_Speed: 0.8
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -74,14 +74,14 @@ MonoBehaviour:
   player: {fileID: 0}
   health: {fileID: 1915620254884526211}
   animator: {fileID: 1942396512671851677}
-  attackRange: 1.4
-  attackCooldown: 0.35
+  attackRange: 1.6
+  attackCooldown: 0.25
   cooldownTimer: 0
   isAttacking: 0
   destroyDelay: 5
-  attackDelay: 0.5
-  hitboxActiveDuration: 0.7
-  postAttackDelay: 0.25
+  attackDelay: 1.25
+  hitboxActiveDuration: 1
+  postAttackDelay: 1.5
   attackHitbox: {fileID: 6416345060849954263}
 --- !u!114 &1915620254884526211
 MonoBehaviour:
@@ -162,7 +162,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 1, z: 1.5}
   m_Center: {x: 0, y: 1, z: 1}
 --- !u!114 &7766913437823704927
 MonoBehaviour:
@@ -188,7 +188,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 8e0bf24aa59e2ae4a8fa21c4a4b5222a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.07620553
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8e0bf24aa59e2ae4a8fa21c4a4b5222a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -196,11 +196,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8e0bf24aa59e2ae4a8fa21c4a4b5222a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.0021924078
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8e0bf24aa59e2ae4a8fa21c4a4b5222a, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9848078
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8e0bf24aa59e2ae4a8fa21c4a4b5222a, type: 3}
       propertyPath: m_LocalRotation.x
@@ -208,7 +208,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8e0bf24aa59e2ae4a8fa21c4a4b5222a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.17364825
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8e0bf24aa59e2ae4a8fa21c4a4b5222a, type: 3}
       propertyPath: m_LocalRotation.z
@@ -220,7 +220,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8e0bf24aa59e2ae4a8fa21c4a4b5222a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8e0bf24aa59e2ae4a8fa21c4a4b5222a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,16 +9,16 @@ public class AmmoUI : MonoBehaviour
     [SerializeField] private PlayerController player;
 
     [Tooltip("탄약 표시 텍스트")]
-    [SerializeField] private Text ammoText;
+    [SerializeField] private TextMeshProUGUI ammoText;
 
     [Tooltip("재장전 중 표시 텍스트")]
-    [SerializeField] private Text reloadingText;
+    [SerializeField] private TextMeshProUGUI reloadingText;
 
     private void Update()
     {
         if (player == null || ammoText == null) return;
 
-        ammoText.text = $"{player.CurrentAmmo} / {player.ReserveAmmo}";
+        ammoText.text = $"{player.CurrentAmmo}/{player.ReserveAmmo}";
 
         if (reloadingText != null)
             reloadingText.gameObject.SetActive(player.IsReloading);

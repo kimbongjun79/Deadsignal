@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7271523995568163980}
   - component: {fileID: 1915620254884526211}
   m_Layer: 0
-  m_Name: zombie_enemy_type2
+  m_Name: Running_zombie
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5411278423455690705}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -54.84, y: 0, z: 9.98}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -74,7 +74,7 @@ MonoBehaviour:
   player: {fileID: 0}
   health: {fileID: 1915620254884526211}
   animator: {fileID: 5505966216254406021}
-  attackRange: 1.4
+  attackRange: 1.3
   attackCooldown: 0.35
   cooldownTimer: 0
   isAttacking: 0
@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d27a5c8dd3137440bf9322df2c12b2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackHitbox
-  damage: 10
+  damage: 15
   hasHit: 0
 --- !u!1001 &6852805058807362182
 PrefabInstance:
