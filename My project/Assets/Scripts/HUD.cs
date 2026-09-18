@@ -1,14 +1,14 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 // 남은 시간과 처치 수를 화면에 표시하는 HUD
 public class HUD : MonoBehaviour
 {
     [Tooltip("남은 시간 표시 텍스트")]
-    [SerializeField] private Text timeText;
+    [SerializeField] private TextMeshProUGUI timeText;
 
     [Tooltip("처치 수 표시 텍스트")]
-    [SerializeField] private Text killText;
+    [SerializeField] private TextMeshProUGUI killText;
 
     private void Update()
     {

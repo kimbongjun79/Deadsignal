@@ -43,6 +43,12 @@ public class EnemySpawnManager : MonoBehaviour
     [Tooltip("다음 스폰까지 남은 시간")]
     [SerializeField] private float spawnTimer;
 
+    [Header("NavMesh 검증")]
+    [Tooltip("스폰 위치 주변 NavMesh 탐색 허용 반경")]
+    [SerializeField] private float navMeshSampleRadius = 3f;
+
+    [Tooltip("유효한 위치를 찾기 위한 최대 재시도 횟수")]
+    [SerializeField] private int maxSpawnAttempts = 10;
     private void Awake()
     {
         if (player == null)
@@ -89,25 +95,34 @@ public class EnemySpawnManager : MonoBehaviour
         float factor = GetProgressFactor();
         return Mathf.Lerp(startHealthMultiplier, maxHealthMultiplier, factor);
     }
-
-    // 플레이어 기준 minSpawnDistance ~ maxSpawnDistance 사이, 같은 y축 평지에 Enemy 스폰
+    // 플레이어 기준 minSpawnDistance ~ maxSpawnDistance 사이, NavMesh 위의 유효한 위치에 Enemy 스폰
     private void Spawn()
     {
-        float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
-        float distance = Random.Range(minSpawnDistance, maxSpawnDistance);
-
-        Vector3 offset = new Vector3(Mathf.Cos(angle) * distance, 0f, Mathf.Sin(angle) * distance);
-        Vector3 spawnPos = new Vector3(player.position.x + offset.x, player.position.y, player.position.z + offset.z);
-
-        GameObject enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-
-        HealthSystemForDummies health = enemy.GetComponent<HealthSystemForDummies>();
-        if (health != null)
+        for (int attempt = 0; attempt < maxSpawnAttempts; attempt++)
         {
-            float multiplier = GetCurrentHealthMultiplier();
-            health.AddToMaximumHealth(health.MaximumHealth * (multiplier - 1f));
-            health.ReviveWithMaximumHealth();
+            float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+            float distance = Random.Range(minSpawnDistance, maxSpawnDistance);
+
+            Vector3 offset = new Vector3(Mathf.Cos(angle) * distance, 0f, Mathf.Sin(angle) * distance);
+            Vector3 candidatePos = new Vector3(player.position.x + offset.x, player.position.y, player.position.z + offset.z);
+
+            if (UnityEngine.AI.NavMesh.SamplePosition(candidatePos, out UnityEngine.AI.NavMeshHit hit, navMeshSampleRadius, UnityEngine.AI.NavMesh.AllAreas))
+            {
+                GameObject enemy = Instantiate(enemyPrefab, hit.position, Quaternion.identity);
+
+                HealthSystemForDummies health = enemy.GetComponent<HealthSystemForDummies>();
+                if (health != null)
+                {
+                    float multiplier = GetCurrentHealthMultiplier();
+                    health.AddToMaximumHealth(health.MaximumHealth * (multiplier - 1f));
+                    health.ReviveWithMaximumHealth();
+                }
+
+                return; // 성공 시 즉시 종료
+            }
         }
+
+        // maxSpawnAttempts 시도 모두 실패 시 이번 틱은 스폰하지 않고 넘어감
     }
     private void OnDrawGizmosSelected()
     {

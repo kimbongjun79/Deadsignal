@@ -1,15 +1,15 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
 
 // 게임오버/클리어 화면 공용: 생존 시간과 처치 수를 표시
 public class ResultScreen : MonoBehaviour
 {
     [Tooltip("생존 시간 표시 텍스트")]
-    [SerializeField] private Text survivedTimeText;
+    [SerializeField] private TextMeshProUGUI survivedTimeText;
 
     [Tooltip("처치 수 표시 텍스트")]
-    [SerializeField] private Text killCountText;
+    [SerializeField] private TextMeshProUGUI killCountText;
 
     [Tooltip("타이틀로 돌아가는 씬 이름")]
     [SerializeField] private string titleSceneName = "Title";

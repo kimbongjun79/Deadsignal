@@ -4,6 +4,15 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+    public int CurrentAmmo => currentAmmo;
+    public int ReserveAmmo => reserveAmmo;
+    public bool IsReloading => isReloading;
+    // 아이템 등 외부에서 예비 탄약을 보충할 때 호출
+    public void AddReserveAmmo(int amount)
+    {
+        reserveAmmo += amount;
+    }
+
     [Tooltip("체력 관리 컴포넌트")]
     [SerializeField] private HealthSystemForDummies health;
 
@@ -32,7 +41,21 @@ public class PlayerController : MonoBehaviour
     [Tooltip("현재 플레이어의 Y축 회전 각도")]
     [SerializeField] private float yaw;
 
-    [Header("무기 드롭")]
+    [Header("탄약")]
+    [Tooltip("탄창 용량 (1회 장전 시 채워지는 탄약 수)")]
+    [SerializeField] private int magazineSize = 12;
+
+    [Tooltip("현재 장전된 탄약 수")]
+    [SerializeField] private int currentAmmo;
+
+    [Tooltip("예비 탄약 (탄창 제외 보유 총량)")]
+    [SerializeField] private int reserveAmmo = 48;
+
+    [Tooltip("재장전 소요 시간 (초)")]
+    [SerializeField] private float reloadDuration = 4f;
+
+    [Tooltip("현재 재장전 중인지 여부")]
+    [SerializeField] private bool isReloading;
     [Tooltip("손에 부착된 총기 오브젝트 (사망 시 분리됨)")]
     [SerializeField] private Transform weapon;
 
@@ -83,6 +106,8 @@ public class PlayerController : MonoBehaviour
 
     [Tooltip("애니메이션 재생용 Animator 컴포넌트")]
     [SerializeField] private Animator animator;
+
+
     private void Awake()
     {
         health = GetComponent<HealthSystemForDummies>();
@@ -90,6 +115,7 @@ public class PlayerController : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         yaw = transform.eulerAngles.y;
         previousHP = health.CurrentHealth;
+        currentAmmo = magazineSize;
     }
 
     private void Update()
@@ -122,7 +148,10 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("Hit");
         previousHP = health.CurrentHealth;
 
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time >= nextFireTime)
+        if (Input.GetKeyDown(KeyCode.R) && !isReloading && currentAmmo < magazineSize && reserveAmmo > 0)
+            StartCoroutine(Reload());
+
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time >= nextFireTime && !isReloading && currentAmmo > 0)
         {
             Fire();
             animator.SetTrigger("Fire");
@@ -149,6 +178,8 @@ public class PlayerController : MonoBehaviour
     {
         if (firePoint == null) return;
 
+        currentAmmo--;
+
         SpawnMuzzleFlash();
 
         if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hit, hitscanRange, hitMask))
@@ -157,6 +188,22 @@ public class PlayerController : MonoBehaviour
             if (health != null)
                 health.AddToCurrentHealth(-hitscanDamage);
         }
+    }
+    // 지정된 시간 동안 재장전 처리 후 탄창을 채움
+    private System.Collections.IEnumerator Reload()
+    {
+        isReloading = true;
+        animator.SetTrigger("Reload");
+
+        yield return new WaitForSeconds(reloadDuration);
+
+        int needed = magazineSize - currentAmmo;
+        int loaded = Mathf.Min(needed, reserveAmmo);
+
+        currentAmmo += loaded;
+        reserveAmmo -= loaded;
+
+        isReloading = false;
     }
     private void OnDrawGizmos()
     {
