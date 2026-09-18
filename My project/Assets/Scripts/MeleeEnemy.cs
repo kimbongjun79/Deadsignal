@@ -58,4 +58,11 @@ public class MeleeEnemy : EnemyBase
 
         isAttacking = false;
     }
+    protected override void HandleDeath()
+    {
+        if (attackHitbox != null)
+            attackHitbox.SetActive(false);
+
+        base.HandleDeath();
+    }
 }

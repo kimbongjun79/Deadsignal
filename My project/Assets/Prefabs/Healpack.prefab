@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 292442607760570333}
   - component: {fileID: 2054548250408903159}
   - component: {fileID: 8953351705369038522}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 8075597397979146612}
   - component: {fileID: 5495000107629631017}
   - component: {fileID: 180352373483866241}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Healpack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,9 +246,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: 173296ca56ec6cf43a4c089353d375a1, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 173296ca56ec6cf43a4c089353d375a1, type: 3}
       propertyPath: m_Name
       value: model
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 173296ca56ec6cf43a4c089353d375a1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 173296ca56ec6cf43a4c089353d375a1, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

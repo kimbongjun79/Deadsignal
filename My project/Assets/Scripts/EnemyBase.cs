@@ -102,6 +102,7 @@ public abstract class EnemyBase : MonoBehaviour
         Destroy(gameObject, destroyDelay);
     }
 
+
     // 각 몬스터별 공격 방식 구현 (근접/원거리에서 재정의)
     protected abstract void StartAttack();
 }

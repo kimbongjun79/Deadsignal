@@ -29,8 +29,8 @@ public class PlayerController : MonoBehaviour
     [Tooltip("현재 달리기 여부")]
     [SerializeField] private bool isRunning;
 
-    [Tooltip("Q/E 키 입력 시 회전속도")]
-    [SerializeField] private float rotationSpeed = 5f;
+    //[Tooltip("Q/E 키 입력 시 회전속도")]
+    //[SerializeField] private float rotationSpeed = 5f;
 
     [Tooltip("이동에 사용되는 Rigidbody 컴포넌트")]
     [SerializeField] private Rigidbody rb;
@@ -40,6 +40,9 @@ public class PlayerController : MonoBehaviour
 
     [Tooltip("현재 플레이어의 Y축 회전 각도")]
     [SerializeField] private float yaw;
+
+    [Tooltip("마우스 좌우 회전 감도")]
+    [SerializeField] private float mouseSensitivity = 3f;
 
     [Header("탄약")]
     [Tooltip("탄창 용량 (1회 장전 시 채워지는 탄약 수)")]
@@ -83,6 +86,9 @@ public class PlayerController : MonoBehaviour
     [Tooltip("총알이 발사되는 위치")]
     [SerializeField] private Transform firePoint;
 
+    [Header("레이저 조준선")]
+    [Tooltip("firePoint에서 벽/적까지 그려지는 레이저 LineRenderer")]
+    [SerializeField] private LineRenderer laserSight;
     [Header("총구 이펙트")]
     [Tooltip("Cartoon FX 머즐 플래시 파티클 프리펩 (CFX_SpawnSystem에 사전 등록되어 있어야 함)")]
     [SerializeField] private GameObject muzzleFlashPrefab;
@@ -107,6 +113,12 @@ public class PlayerController : MonoBehaviour
     [Tooltip("애니메이션 재생용 Animator 컴포넌트")]
     [SerializeField] private Animator animator;
 
+    [Tooltip("게임 시작 시 입력 무시 시간 (초). 타이틀 클릭 잔여 입력 방지용")]
+    [SerializeField] private float inputIgnoreDuration = 0.2f;
+
+    [Tooltip("입력 무시가 끝나는 시각")]
+    [SerializeField] private float inputIgnoreUntil;
+
 
     private void Awake()
     {
@@ -116,6 +128,11 @@ public class PlayerController : MonoBehaviour
         yaw = transform.eulerAngles.y;
         previousHP = health.CurrentHealth;
         currentAmmo = magazineSize;
+
+        inputIgnoreUntil = Time.time + inputIgnoreDuration;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -133,12 +150,16 @@ public class PlayerController : MonoBehaviour
         }
 
         moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
-        if (Input.GetKey(KeyCode.Q))
-            yaw -= rotationSpeed* Time.deltaTime;
-        if (Input.GetKey(KeyCode.E))
-            yaw += rotationSpeed* Time.deltaTime;
+        // Q/E 키 회전 방식 (임시 주석 처리, 추후 참고용)
+        // if (Input.GetKeyDown(KeyCode.Q))
+        //     yaw -= rotationStep;
+        // if (Input.GetKeyDown(KeyCode.E))
+        //     yaw += rotationStep;
 
-        isRunning = Input.GetKey(KeyCode.LeftShift) && moveInput.sqrMagnitude > 0.01f;
+        // 마우스 방향 회전 방식 (복원)
+        yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
+
+        isRunning = Input.GetKey(KeyCode.LeftShift) && moveInput.sqrMagnitude > 0.01f && !isReloading;
 
         animator.SetFloat("MoveX", moveInput.x, 0.1f, Time.deltaTime);
         animator.SetFloat("MoveZ", moveInput.z, 0.1f, Time.deltaTime);
@@ -151,14 +172,17 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R) && !isReloading && currentAmmo < magazineSize && reserveAmmo > 0)
             StartCoroutine(Reload());
 
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time >= nextFireTime && !isReloading && currentAmmo > 0)
+        if (Time.time >= inputIgnoreUntil && Input.GetButton("Fire1") && Time.time >= nextFireTime && !isReloading && currentAmmo > 0)
         {
             Fire();
             animator.SetTrigger("Fire");
             nextFireTime = Time.time + fireRate;
         }
     }
-    
+    private void LateUpdate()
+    {
+        UpdateLaserSight();
+    }
     private void FixedUpdate()
     {
         if (!health.IsAlive)
@@ -187,6 +211,10 @@ public class PlayerController : MonoBehaviour
             HealthSystemForDummies health = hit.collider.GetComponentInParent<HealthSystemForDummies>();
             if (health != null)
                 health.AddToCurrentHealth(-hitscanDamage);
+
+            HitFlash flash = hit.collider.GetComponentInParent<HitFlash>();
+            if (flash != null)
+                flash.Flash();
         }
     }
     // 지정된 시간 동안 재장전 처리 후 탄창을 채움
@@ -288,5 +316,23 @@ public class PlayerController : MonoBehaviour
         flash.transform.localPosition = Vector3.zero;
         flash.transform.localRotation = Quaternion.identity;
         Destroy(flash, 2f);
+    }
+    // [레이저 전용] firePoint에서 전방 Raycast로 끝점만 계산 (데미지/이펙트 없음)
+    private Vector3 GetHitscanEndPoint()
+    {
+        if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hit, hitscanRange, hitMask))
+            return hit.point;
+
+        return firePoint.position + firePoint.forward * hitscanRange;
+    }
+    // [레이저 표시] 매 프레임 호출, 판정 없음
+    private void UpdateLaserSight()
+    {
+        if (laserSight == null || firePoint == null) return;
+
+        Vector3 endPoint = GetHitscanEndPoint();
+
+        laserSight.SetPosition(0, firePoint.position);
+        laserSight.SetPosition(1, endPoint);
     }
 }

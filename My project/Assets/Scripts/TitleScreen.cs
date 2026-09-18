@@ -10,7 +10,9 @@ public class TitleScreen : MonoBehaviour
     // 버튼에서 호출: 게임 시작
     public void StartGame()
     {
-        SceneManager.LoadScene(gameplaySceneName);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        SceneManager.LoadScene(gameplaySceneName);        
     }
 
     // 버튼에서 호출: 게임 종료
