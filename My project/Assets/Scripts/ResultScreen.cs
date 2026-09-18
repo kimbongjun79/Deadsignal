@@ -16,14 +16,17 @@ public class ResultScreen : MonoBehaviour
 
     private void Start()
     {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
         float survivedTime = PlayerPrefs.GetFloat("LastSurvivedTime", 0f);
         int killCount = PlayerPrefs.GetInt("LastKillCount", 0);
 
         int minutes = Mathf.FloorToInt(survivedTime / 60f);
         int seconds = Mathf.FloorToInt(survivedTime % 60f);
 
-        survivedTimeText.text = $"생존 시간: {minutes:00}:{seconds:00}";
-        killCountText.text = $"처치한 좀비: {killCount}";
+        survivedTimeText.text = $"Time Survived: {minutes:00}:{seconds:00}";
+        killCountText.text = $"Zombies Killed: {killCount}";
     }
 
     // 버튼에서 호출: 타이틀로 복귀
