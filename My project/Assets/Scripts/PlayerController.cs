@@ -128,9 +128,6 @@ public class PlayerController : MonoBehaviour
                 DropWeapon();
                 rb.constraints = RigidbodyConstraints.FreezeRotation;
                 isDeathHandled = true;
-
-                if (GameManager.Instance != null)
-                    GameManager.Instance.TriggerGameOver();
             }
             return;
         }
