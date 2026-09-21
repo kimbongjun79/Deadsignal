@@ -422,9 +422,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.19671828
-  m_TransitionOffset: 0.04691088
-  m_ExitTime: 0.75000006
+  m_TransitionDuration: 0.32529676
+  m_TransitionOffset: 0.2294276
+  m_ExitTime: 0.26783085
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -683,7 +683,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Grenade Throw
-  m_Speed: 2
+  m_Speed: 1.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -39113759230319599}
