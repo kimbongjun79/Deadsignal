@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     public int CurrentAmmo => currentAmmo;
     public int ReserveAmmo => reserveAmmo;
     public bool IsReloading => isReloading;
+    public float CurrentStamina => currentStamina;
+    public float MaxStamina => maxStamina;
     // 아이템 등 외부에서 예비 탄약을 보충할 때 호출
     public void AddReserveAmmo(int amount)
     {
@@ -18,6 +20,22 @@ public class PlayerController : MonoBehaviour
 
     [Tooltip("직전 프레임의 HP (피격 감지용)")]
     [SerializeField] private float previousHP;
+
+    [Header("스태미나")]
+    [Tooltip("최대 스태미나")]
+    [SerializeField] private float maxStamina = 100f;
+
+    [Tooltip("현재 스태미나")]
+    [SerializeField] private float currentStamina;
+
+    [Tooltip("초당 스태미나 소모량 (달리기 중)")]
+    [SerializeField] private float staminaDrainRate = 20f;
+
+    [Tooltip("초당 스태미나 회복량 (달리지 않을 때)")]
+    [SerializeField] private float staminaRegenRate = 10f;
+
+    [Tooltip("현재 달리기가 스태미나 부족으로 잠겨있는지 여부")]
+    [SerializeField] private bool staminaLocked;
 
     [Header("이동 속도")]
     [Tooltip("걷기 속도")]
@@ -87,6 +105,44 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Cartoon FX 머즐 플래시 파티클 프리펩 (CFX_SpawnSystem에 사전 등록되어 있어야 함)")]
     [SerializeField] private GameObject muzzleFlashPrefab;
 
+    [Header("수류탄")]
+    [Tooltip("투척할 수류탄 프리펩")]
+    [SerializeField] private GameObject grenadePrefab;
+
+    [Tooltip("수류탄이 발사되는 위치")]
+    [SerializeField] private Transform grenadePoint;
+
+    [Tooltip("보유 수류탄 개수")]
+    [SerializeField] private int grenadeCount = 2;
+
+    [Tooltip("투척 모션 시작 후 실제로 수류탄이 발사되기까지 지연 시간 (초)")]
+    [SerializeField] private float grenadeThrowDelay = 0.3f;
+
+    [Tooltip("투척 쿨다운 (초, 고정)")]
+    [SerializeField] private float grenadeCooldown = 2f;
+
+    [Tooltip("다음 투척 가능 시각")]
+    [SerializeField] private float nextGrenadeTime;
+
+    [Tooltip("투척 힘 (전방)")]
+    [SerializeField] private float throwForce = 12f;
+
+    [Tooltip("투척 힘 (위쪽, 포물선 형성용)")]
+    [SerializeField] private float throwUpwardForce = 5f;
+
+    [Header("기즈모 - 투척 궤적")]
+    [Tooltip("포물선 궤적 표시 여부")]
+    [SerializeField] private bool showThrowTrajectory = true;
+
+    [Tooltip("궤적 샘플링 점 개수")]
+    [SerializeField] private int trajectorySteps = 30;
+
+    [Tooltip("궤적 시뮬레이션 시간 간격")]
+    [SerializeField] private float trajectoryTimeStep = 0.1f;
+
+    // 외부(GrenadeUI)에서 참조
+    public int GrenadeCount => grenadeCount;
+
     [Header("기즈모 - 시야각")]
     [Tooltip("시야각 표시 여부")]
     [SerializeField] private bool showViewAngleGizmo = true;
@@ -116,6 +172,15 @@ public class PlayerController : MonoBehaviour
         yaw = transform.eulerAngles.y;
         previousHP = health.CurrentHealth;
         currentAmmo = magazineSize;
+<<<<<<< Updated upstream
+=======
+        currentStamina = maxStamina;
+
+        inputIgnoreUntil = Time.time + inputIgnoreDuration;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+>>>>>>> Stashed changes
     }
 
     private void Update()
@@ -138,7 +203,40 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.E))
             yaw += rotationSpeed* Time.deltaTime;
 
+<<<<<<< Updated upstream
         isRunning = Input.GetKey(KeyCode.LeftShift) && moveInput.sqrMagnitude > 0.01f;
+=======
+        // 마우스 방향 회전 방식 (복원)
+        yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
+
+        bool wantsToRun = Input.GetKey(KeyCode.LeftShift) && moveInput.sqrMagnitude > 0.01f && !isReloading;
+
+        if (staminaLocked)
+        {
+            isRunning = false;
+            if (currentStamina >= maxStamina * 0.3f)
+                staminaLocked = false;
+        }
+        else
+        {
+            isRunning = wantsToRun && currentStamina > 0f;
+        }
+
+        if (isRunning)
+        {
+            currentStamina -= staminaDrainRate * Time.deltaTime;
+            if (currentStamina <= 0f)
+            {
+                currentStamina = 0f;
+                isRunning = false;
+                staminaLocked = true;
+            }
+        }
+        else
+        {
+            currentStamina = Mathf.Min(maxStamina, currentStamina + staminaRegenRate * Time.deltaTime);
+        }
+>>>>>>> Stashed changes
 
         animator.SetFloat("MoveX", moveInput.x, 0.1f, Time.deltaTime);
         animator.SetFloat("MoveZ", moveInput.z, 0.1f, Time.deltaTime);
@@ -151,7 +249,19 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R) && !isReloading && currentAmmo < magazineSize && reserveAmmo > 0)
             StartCoroutine(Reload());
 
+<<<<<<< Updated upstream
         if (Input.GetKeyDown(KeyCode.Space) && Time.time >= nextFireTime && !isReloading && currentAmmo > 0)
+=======
+        if (Input.GetKeyDown(KeyCode.E) && Time.time >= nextGrenadeTime && grenadeCount > 0)
+        {
+            grenadeCount--;
+            nextGrenadeTime = Time.time + grenadeCooldown;
+            animator.SetTrigger("ThrowGrenade");
+            StartCoroutine(ThrowGrenadeAfterDelay());
+        }
+
+        if (Time.time >= inputIgnoreUntil && Input.GetButton("Fire1") && Time.time >= nextFireTime && !isReloading && currentAmmo > 0)
+>>>>>>> Stashed changes
         {
             Fire();
             animator.SetTrigger("Fire");
@@ -188,6 +298,18 @@ public class PlayerController : MonoBehaviour
             if (health != null)
                 health.AddToCurrentHealth(-hitscanDamage);
         }
+    }
+    // 투척 모션 시작 후 grenadeThrowDelay 경과 시 실제 수류탄 생성 및 발사
+    private System.Collections.IEnumerator ThrowGrenadeAfterDelay()
+    {
+        yield return new WaitForSeconds(grenadeThrowDelay);
+
+        if (grenadePrefab == null || grenadePoint == null) yield break;
+
+        GameObject grenade = Instantiate(grenadePrefab, grenadePoint.position, Quaternion.identity);
+        Rigidbody grenadeRb = grenade.GetComponent<Rigidbody>();
+        if (grenadeRb != null)
+            grenadeRb.AddForce(grenadePoint.forward * throwForce + Vector3.up * throwUpwardForce, ForceMode.Impulse);
     }
     // 지정된 시간 동안 재장전 처리 후 탄창을 채움
     private System.Collections.IEnumerator Reload()
@@ -243,6 +365,30 @@ public class PlayerController : MonoBehaviour
                 Gizmos.color = Color.red;
                 Vector3 moveDir = transform.TransformDirection(moveInput);
                 DrawArrow(origin, moveDir * arrowLength);
+            }
+        }
+
+        // 수류탄 포물선 투척 궤적 표시
+        if (showThrowTrajectory && firePoint != null)
+        {
+            Gizmos.color = Color.cyan;
+
+            Rigidbody tempRb = GetComponent<Rigidbody>();
+            float mass = tempRb != null ? 1f : 1f; // Impulse 기준이므로 질량 1 가정 (수류탄 프리펩의 실제 Rigidbody mass와 다를 경우 궤적이 다소 어긋날 수 있음)
+
+            Vector3 startPos = firePoint.position;
+            Vector3 velocity = firePoint.forward * throwForce + Vector3.up * throwUpwardForce;
+            Vector3 gravity = Physics.gravity;
+
+            Vector3 prevPoint = startPos;
+            for (int i = 1; i <= trajectorySteps; i++)
+            {
+                float t = i * trajectoryTimeStep;
+                Vector3 point = startPos + velocity * t + 0.5f * gravity * t * t;
+                Gizmos.DrawLine(prevPoint, point);
+                prevPoint = point;
+
+                if (point.y < startPos.y - 10f) break; // 바닥 아래로 과도하게 내려가면 중단
             }
         }
     }
