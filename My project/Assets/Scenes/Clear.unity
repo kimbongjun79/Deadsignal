@@ -146,7 +146,7 @@ RectTransform:
   m_GameObject: {fileID: 557297563}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1109755075}
@@ -154,7 +154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 364.81, y: -208}
+  m_AnchoredPosition: {x: 33, y: -99}
   m_SizeDelta: {x: 729.6277, y: 736.6138}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &557297565
@@ -177,7 +177,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3479764668830062368, guid: cfea0f42cb86697429ab8cd9a3f9d759, type: 3}
+  m_Sprite: {fileID: -8302550610991508843, guid: ac13ec3f72436564bbddd8d484a29da2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -446,7 +446,7 @@ RectTransform:
   m_GameObject: {fileID: 1109755074}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1114953435}
@@ -455,7 +455,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -771.5473, y: 107.30127}
+  m_AnchoredPosition: {x: -590, y: 9}
   m_SizeDelta: {x: -1931.4229, y: -1134.3276}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1109755076
@@ -471,7 +471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.9647059}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -877,8 +877,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6398b66cba6e174db0c13d1803b0cb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResultScreen
-  survivedTimeText: {fileID: 1114953436}
-  killCountText: {fileID: 1625141921}
+  survivedTimeText: {fileID: 0}
+  killCountText: {fileID: 0}
   titleSceneName: Title
 --- !u!1 &1621400251
 GameObject:
