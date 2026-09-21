@@ -876,8 +876,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6398b66cba6e174db0c13d1803b0cb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResultScreen
-  survivedTimeText: {fileID: 0}
-  killCountText: {fileID: 0}
+  survivedTimeText: {fileID: 1114953436}
+  killCountText: {fileID: 1625141921}
   titleSceneName: Title
 --- !u!1 &1621400251
 GameObject:
