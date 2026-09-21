@@ -17917,10 +17917,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fddb7b6d4bca2249bbd6e0a55a6054a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  laserSight: {fileID: 1416686899}
-  inputIgnoreDuration: 0.2
-  inputIgnoreUntil: 0
-  mouseSensitivity: 3
   health: {fileID: 1855129750}
   previousHP: 100
   maxStamina: 100
@@ -17934,6 +17930,7 @@ MonoBehaviour:
   rb: {fileID: 1855129747}
   moveInput: {x: 0, y: 0, z: 0}
   yaw: 0
+  mouseSensitivity: 3
   magazineSize: 30
   currentAmmo: 30
   reserveAmmo: 60
@@ -17950,9 +17947,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   firePoint: {fileID: 948159373}
+  laserSight: {fileID: 1416686899}
   muzzleFlashPrefab: {fileID: 8482338843143658256, guid: 587da8fe53471684e8e69eceab848c70, type: 3}
+  GrenadePoint: {fileID: 285744818}
   grenadePrefab: {fileID: 7203841240441520592, guid: a972c855284ac3a4d9118effcfe70597, type: 3}
-  grenadePoint: {fileID: 285744818}
   grenadeCount: 10
   grenadeThrowDelay: 0.75
   grenadeCooldown: 2
@@ -17968,6 +17966,8 @@ MonoBehaviour:
   showDirectionArrows: 1
   arrowLength: 3.45
   animator: {fileID: 1227884563}
+  inputIgnoreDuration: 0.2
+  inputIgnoreUntil: 0
 --- !u!54 &1855129747
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -20043,7 +20043,7 @@ Transform:
   m_GameObject: {fileID: 2071235664}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.409}
+  m_LocalPosition: {x: 0, y: 1.09, z: 0.409}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
