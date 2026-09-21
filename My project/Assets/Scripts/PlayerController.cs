@@ -14,6 +14,11 @@ public class PlayerController : MonoBehaviour
     {
         reserveAmmo += amount;
     }
+    // 설정 메뉴에서 마우스 감도를 변경할 때 호출
+    public void SetMouseSensitivity(float value)
+    {
+        mouseSensitivity = value;
+    }
 
     [Tooltip("체력 관리 컴포넌트")]
     [SerializeField] private HealthSystemForDummies health;
@@ -185,6 +190,8 @@ public class PlayerController : MonoBehaviour
         previousHP = health.CurrentHealth;
         currentAmmo = magazineSize;
         currentStamina = maxStamina;
+        //Awake() 마지막에 저장된 감도 불러오기 추가
+        mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", mouseSensitivity);
 
         inputIgnoreUntil = Time.time + inputIgnoreDuration;
 
