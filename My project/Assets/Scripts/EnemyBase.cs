@@ -32,6 +32,15 @@ public abstract class EnemyBase : MonoBehaviour
     [Tooltip("사망 애니메이션 재생 후 오브젝트 제거까지 대기 시간")]
     [SerializeField] protected float destroyDelay = 2f;
 
+    [Tooltip("좀비 효과음 재생용 AudioSource")]
+    [SerializeField] private AudioSource audioSource;
+
+    [Tooltip("배회/추격 그르렁 소리")]
+    [SerializeField] private AudioClip growlSound;
+
+    [Tooltip("사망 소리")]
+    [SerializeField] private AudioClip deathSound;
+
     protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();

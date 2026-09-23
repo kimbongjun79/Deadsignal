@@ -19,6 +19,15 @@ public class PlayerController : MonoBehaviour
     {
         mouseSensitivity = value;
     }
+    [Header("사운드")]
+    [Tooltip("발사 효과음")]
+    [SerializeField] private AudioClip fireSound;
+
+    [Tooltip("재장전 시작음")]
+    [SerializeField] private AudioClip reloadStartSound;
+
+    [Tooltip("재장전 완료음")]
+    [SerializeField] private AudioClip reloadEndSound;
 
     [Tooltip("체력 관리 컴포넌트")]
     [SerializeField] private HealthSystemForDummies health;
@@ -308,6 +317,7 @@ public class PlayerController : MonoBehaviour
         if (firePoint == null) return;
 
         currentAmmo--;
+        AudioManager.Instance?.PlaySFX(fireSound);
 
         SpawnMuzzleFlash();
 
@@ -352,6 +362,7 @@ public class PlayerController : MonoBehaviour
     {
         isReloading = true;
         animator.SetTrigger("Reload");
+        AudioManager.Instance?.PlaySFX(reloadStartSound);
 
         yield return new WaitForSeconds(reloadDuration);
 
@@ -361,6 +372,7 @@ public class PlayerController : MonoBehaviour
         currentAmmo += loaded;
         reserveAmmo -= loaded;
 
+        AudioManager.Instance?.PlaySFX(reloadEndSound);
         isReloading = false;
     }
     private void OnDrawGizmos()
