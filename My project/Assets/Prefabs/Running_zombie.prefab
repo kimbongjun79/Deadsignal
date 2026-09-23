@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d27a5c8dd3137440bf9322df2c12b2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackHitbox
-  damage: 15
+  damage: 10
   hasHit: 0
 --- !u!1001 &6852805058807362182
 PrefabInstance:
@@ -253,6 +253,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5602156011692487775, guid: 4ee995d697dca4745a165684e2a1488f, type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -1372682465251703209, guid: 4ee995d697dca4745a165684e2a1488f, type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4ee995d697dca4745a165684e2a1488f, type: 3}
       propertyPath: m_Name
       value: Zombie
@@ -260,6 +268,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 4ee995d697dca4745a165684e2a1488f, type: 3}
       propertyPath: m_TagString
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2946127283979886938, guid: 4ee995d697dca4745a165684e2a1488f, type: 3}
+      propertyPath: m_CastShadows
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

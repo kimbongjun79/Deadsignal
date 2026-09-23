@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d27a5c8dd3137440bf9322df2c12b2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackHitbox
-  damage: 10
+  damage: 15
   hasHit: 0
 --- !u!1001 &5448883857506162956
 PrefabInstance:

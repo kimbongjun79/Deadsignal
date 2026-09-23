@@ -14,6 +14,11 @@ public class PlayerController : MonoBehaviour
     {
         reserveAmmo += amount;
     }
+    // 설정 메뉴에서 마우스 감도를 변경할 때 호출
+    public void SetMouseSensitivity(float value)
+    {
+        mouseSensitivity = value;
+    }
 
     [Tooltip("체력 관리 컴포넌트")]
     [SerializeField] private HealthSystemForDummies health;
@@ -185,6 +190,8 @@ public class PlayerController : MonoBehaviour
         previousHP = health.CurrentHealth;
         currentAmmo = magazineSize;
         currentStamina = maxStamina;
+        //Awake() 마지막에 저장된 감도 불러오기 추가
+        mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", mouseSensitivity);
 
         inputIgnoreUntil = Time.time + inputIgnoreDuration;
 
@@ -252,7 +259,7 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("Hit");
         previousHP = health.CurrentHealth;
 
-        if (Input.GetKeyDown(KeyCode.R) && !isReloading && currentAmmo < magazineSize && reserveAmmo > 0)
+        if ((Input.GetKeyDown(KeyCode.R) || currentAmmo <= 0) && !isReloading && currentAmmo < magazineSize && reserveAmmo > 0)
             StartCoroutine(Reload());
 
         if (Input.GetKeyDown(KeyCode.E) && Time.time >= nextGrenadeTime && grenadeCount > 0)
@@ -260,6 +267,13 @@ public class PlayerController : MonoBehaviour
             grenadeCount--;
             nextGrenadeTime = Time.time + grenadeCooldown;
             animator.SetTrigger("ThrowGrenade");
+
+            if (laserSight != null)
+                laserSight.enabled = false;
+
+            if (weapon != null)
+                weapon.gameObject.SetActive(false);
+
             StartCoroutine(ThrowGrenadeAfterDelay());
         }
 
@@ -308,17 +322,30 @@ public class PlayerController : MonoBehaviour
                 flash.Flash();
         }
     }
-    // 투척 모션 시작 후 grenadeThrowDelay 경과 시 실제 수류탄 생성 및 발사
+    // 투척 모션 시작 후 grenadeCooldown 경과 시 실제 수류탄 생성 및 발사
     private System.Collections.IEnumerator ThrowGrenadeAfterDelay()
     {
-        yield return new WaitForSeconds(grenadeThrowDelay);
+        yield return new WaitForSeconds(grenadeCooldown);
 
-        if (grenadePrefab == null || GrenadePoint == null) yield break;
+        if (grenadePrefab != null && GrenadePoint != null)
+        {
+            GameObject grenade = Instantiate(grenadePrefab, GrenadePoint.position, Quaternion.identity);
+            Rigidbody grenadeRb = grenade.GetComponent<Rigidbody>();
+            Collider grenadeCol = grenade.GetComponent<Collider>();
+            Collider playerCol = GetComponent<Collider>();
 
-        GameObject grenade = Instantiate(grenadePrefab, GrenadePoint.position, Quaternion.identity);
-        Rigidbody grenadeRb = grenade.GetComponent<Rigidbody>();
-        if (grenadeRb != null)
-            grenadeRb.AddForce(GrenadePoint.forward * throwForce + Vector3.up * throwUpwardForce, ForceMode.Impulse);
+            if (grenadeCol != null && playerCol != null)
+                Physics.IgnoreCollision(grenadeCol, playerCol, true);
+
+            if (grenadeRb != null)
+                grenadeRb.AddForce(GrenadePoint.forward * throwForce + Vector3.up * throwUpwardForce, ForceMode.Impulse);
+        }
+
+        if (laserSight != null)
+            laserSight.enabled = true;
+
+        if (weapon != null)
+            weapon.gameObject.SetActive(true);
     }
     // 지정된 시간 동안 재장전 처리 후 탄창을 채움
     private System.Collections.IEnumerator Reload()
