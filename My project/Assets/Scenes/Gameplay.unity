@@ -3663,6 +3663,52 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4287032483732570238, guid: adda99254975d8d4885528a2fb9bdb29, type: 3}
   m_PrefabInstance: {fileID: 362508563}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &379822003
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 379822005}
+  - component: {fileID: 379822004}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &379822004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 379822003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5678cf847ebd7d841b3c4a2af4837e62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  sfxSource: {fileID: 0}
+  bgmSource: {fileID: 0}
+--- !u!4 &379822005
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 379822003}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 934.281, y: 220.00002, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &384597113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17974,6 +18020,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fddb7b6d4bca2249bbd6e0a55a6054a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  fireSound: {fileID: 0}
+  reloadStartSound: {fileID: 0}
+  reloadEndSound: {fileID: 0}
   health: {fileID: 1855129750}
   previousHP: 100
   maxStamina: 100
@@ -21249,3 +21298,4 @@ SceneRoots:
   - {fileID: 1319036911}
   - {fileID: 351904495}
   - {fileID: 1847307187}
+  - {fileID: 379822005}
